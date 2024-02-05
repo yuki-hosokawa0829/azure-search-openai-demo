@@ -232,7 +232,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--searchanalyzername",
         required=False,
-        default="en.microsoft",
+        default="ja.lucene",
         help="Optional. Name of the Azure AI Search analyzer to use for the content field in the index",
     )
     parser.add_argument("--openaihost", help="Host of the API used to compute embeddings ('azure' or 'openai')")

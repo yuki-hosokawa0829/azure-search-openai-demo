@@ -21,30 +21,40 @@ class ChatApproach(Approach, ABC):
     ASSISTANT = "assistant"
 
     query_prompt_few_shots = [
-        {"role": USER, "content": "How did crypto do last year?"},
-        {"role": ASSISTANT, "content": "Summarize Cryptocurrency Market Dynamics from last year"},
-        {"role": USER, "content": "What are my health plans?"},
-        {"role": ASSISTANT, "content": "Show available health plans"},
+        {'role' : USER, 'content' : 'あべしってなにした人  ' },
+        {'role' : ASSISTANT, 'content' : 'あべし 人物 歴史' },
+        {'role' : USER, 'content' : 'あべしの功績を教えてください' },
+        {'role' : ASSISTANT, 'content' : 'あべし 人物 功績 業績' }
     ]
     NO_RESPONSE = "0"
 
-    follow_up_questions_prompt_content = """Generate 3 very brief follow-up questions that the user would likely ask next.
-    Enclose the follow-up questions in double angle brackets. Example:
-    <<Are there exclusions for prescriptions?>>
-    <<Which pharmacies can be ordered from?>>
-    <<What is the limit for over-the-counter medication?>>
-    Do no repeat questions that have already been asked.
-    Make sure the last question ends with ">>".
+    follow_up_questions_prompt_content = """
+    Answers must be accompanied by three additional follow-up questions to the user's question. The rules for follow-up questions are defined in the Restrictions.
+
+    - Please answer only questions related to Abeshi. If the question is not related to Abeshi, answer "I don't know".
+    - Use double angle brackets to reference the questions, e.g. <<What does Abeshi do? >>.
+    - Try not to repeat questions that have already been asked.
+    - Do not add SOURCES to follow-up questions.
+    - Do not use bulleted follow-up questions. Always enclose them in double angle brackets.
+    - Follow-up questions should be ideas that expand the user's curiosity.
+    - Only generate questions and do not generate any text before or after the questions, such as 'Next Questions'
+
+    EXAMPLE:###
+    Q:あべしはどのような人物ですか？
+    A:あべしは、日本の知性を兼ね備えているがモテない男たちに「あべ思想」という自信の考えを広めた人物です。彼は生殖を重んじ、射精することを大切にした人物とされています。また、負けず嫌いで血気盛んだったが、臆病だが冷静に対処できる性格だったとされています。 [あべし - SampleDocument.pdf]<<あべしはどのような功績を残しましたか？>><<あべしはどのようにあべ思想を広めたのですか？>><<他にもあべしに関する大きな功績はありますか？>>
+
+    Q:あべ思想とはどのような考え方ですか？
+    A:あべ思想とは、他人の目を気にすることなく自身の幸福度を高めることをめざすべきだ、という考え方です。あべしの考え方、行動様式が基になっており、あべ真理、あべ真言とも呼ばれます。あべ思想により多くのモテない男性たちが救われました。[あべし - SampleDocument.pdf]<<あべ思想はどのように広まったのですか？>><<あべしについて教えてください>><<他にも有名なあべしの哲学がありますか？>>
+    ###
+
     """
 
-    query_prompt_template = """Below is a history of the conversation so far, and a new question asked by the user that needs to be answered by searching in a knowledge.
-    You have access to Azure AI Search index with 100's of documents.
-    Generate a search query based on the conversation and the new question.
-    Do not include cited source filenames and document names e.g info.txt or doc.pdf in the search query terms.
-    Do not include any text inside [] or <<>> in the search query terms.
-    Do not include any special characters like '+'.
-    If the question is not in English, translate the question to English before generating the search query.
-    If you cannot generate a search query, return just the number 0.
+    query_prompt_template = """
+    Below is a history of previous conversations and a new question from a user that needs to be answered by searching the Knowledge base on Abeshi.
+    Based on the conversation and the new question, create a search query.
+    Do not include the name of the cited file or document (e.g., info.txt or doc.pdf) in the search query.
+    Do not include text in [] or <>> in the search query.
+    If you cannot generate a search query, return only the number 0.
     """
 
     @property
